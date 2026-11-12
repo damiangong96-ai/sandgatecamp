@@ -709,3 +709,65 @@ a,button,label,summary{-webkit-tap-highlight-color:transparent;touch-action:mani
   .lede,.prose p{color:var(--ink)}
   .on-dark .lede,.hero .lede{color:var(--cream)}
 }
+
+/* ---------- Header v2: one line at every width, nothing cut ---------- */
+.header-in{display:flex;align-items:center;gap:20px}
+.header-in .brand{flex:none}
+.header-in .nav{flex:1 1 auto;justify-content:center;min-width:0}
+.header-right{flex:none;margin-inline-start:auto}
+.nav-link{white-space:nowrap;padding:0 11px}
+.nav{display:none}
+@media (min-width:1320px){.nav{display:flex}.burger{display:none}}
+@media (max-width:1319.98px){.burger{display:inline-grid}}
+.clock{display:none}
+@media (min-width:1640px){.clock{display:inline-flex}}
+@media (min-width:1320px) and (max-width:1500px){.brand>span:not(.logo) small{display:none}.nav-link{padding:0 9px;font-size:13.5px}}
+.lang{display:none}
+.langs{display:inline-flex;align-items:center;height:40px;padding:3px;border-radius:999px;border:1px solid rgba(251,246,238,.24);transition:border-color 300ms ease}
+.header.scrolled .langs{border-color:var(--line)}
+.langs a{display:inline-grid;place-items:center;min-width:38px;height:32px;padding:0 9px;border-radius:999px;font-size:12.5px;letter-spacing:.06em;font-weight:500;opacity:.8;transition:background-color 200ms ease,color 200ms ease,opacity 200ms ease}
+.langs a[lang="ar"]{font-family:"IBM Plex Sans Arabic",var(--f-body);letter-spacing:0;font-size:13.5px}
+.langs a[aria-current="page"]{background:var(--cream);color:var(--ink);opacity:1}
+.header.scrolled .langs a[aria-current="page"]{background:var(--ink);color:var(--cream)}
+@media (hover:hover) and (pointer:fine){.langs a:not([aria-current]):hover{opacity:1}}
+@media (max-width:760px){.header-right .langs{display:none}}
+.langs-sheet{border-color:var(--line-dark);justify-self:start}
+.langs-sheet a{min-width:52px;height:40px;font-size:14px}
+
+/* ---------- Footer scene: the gate at sunset ---------- */
+.giant{padding:0;margin:0}
+.giant::before{display:none}
+.foot-scene{position:relative;height:clamp(380px,52vw,820px);margin-top:clamp(8px,2vw,24px);overflow:hidden;isolation:isolate;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0%,#000 30%);mask-image:linear-gradient(180deg,transparent 0%,#000 30%)}
+.scene-img{position:absolute;inset:-6% 0 0;z-index:-2;will-change:transform}
+.scene-img img{width:100%;height:100%;object-fit:cover;object-position:50% 34%;filter:saturate(1.05)}
+.foot-scene::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(239,228,211,.35) 0%,rgba(239,228,211,0) 35%,rgba(74,42,42,0) 60%,rgba(43,28,36,.55) 100%)}
+.scene-sun{position:absolute;left:50%;top:22%;width:min(520px,60vw);aspect-ratio:1;transform:translate(-50%,-50%) scale(var(--sun,.85));border-radius:50%;z-index:-1;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,244,220,.75) 0%,rgba(255,214,160,.35) 28%,rgba(240,183,132,0) 62%);mix-blend-mode:screen;opacity:var(--sunop,.55)}
+.foot-scene .giant{position:absolute;left:0;right:0;bottom:-.1em;text-align:center;color:rgba(255,248,236,.94);font-size:clamp(3rem,15.5vw,17rem);line-height:.82;letter-spacing:-.02em;text-shadow:0 10px 60px rgba(74,42,42,.35)}
+.foot-scene .giant span{display:inline-block;transform:translateY(var(--rise,30%));transition:transform 120ms linear}
+@media (prefers-reduced-motion:reduce){.scene-img{transform:none!important}.foot-scene .giant span{transform:none}.scene-sun{transform:translate(-50%,-50%)}}
+
+/* ---------- Arabic / RTL ---------- */
+html[lang="ar"]{--f-display:"Amiri","Noto Naskh Arabic",Georgia,serif;--f-body:"IBM Plex Sans Arabic","Noto Sans Arabic",Tahoma,sans-serif}
+html[lang="ar"] .display,html[lang="ar"] .h1,html[lang="ar"] .h2,html[lang="ar"] .h3,html[lang="ar"] .statement,html[lang="ar"] .quote p{font-weight:400;letter-spacing:0;font-variation-settings:normal;line-height:1.25}
+html[lang="ar"] .display{line-height:1.15}
+html[lang="ar"] em{font-style:normal}
+html[lang="ar"] .eyebrow,html[lang="ar"] .k,html[lang="ar"] .time,html[lang="ar"] .dn,html[lang="ar"] .years,html[lang="ar"] .foot-col h4,html[lang="ar"] .stay .eyebrow,html[lang="ar"] .ccard small,html[lang="ar"] .factbar .k,html[lang="ar"] .quick .k,html[lang="ar"] .hero-book .k,html[lang="ar"] .bcard .k,html[lang="ar"] .mapcard figcaption{letter-spacing:0;text-transform:none}
+html[lang="ar"] .lede,html[lang="ar"] .prose p,html[lang="ar"] p{line-height:1.8}
+html[dir="rtl"] .btn svg,html[dir="rtl"] .link-arrow svg,html[dir="rtl"] .go svg,html[dir="rtl"] .cal-nav svg{transform:scaleX(-1)}
+@media (hover:hover) and (pointer:fine){html[dir="rtl"] .btn:hover svg{transform:scaleX(-1) translateX(3px)}}
+html[dir="rtl"] .marquee .track{animation-name:marq-rtl}
+@keyframes marq-rtl{to{transform:translateX(50%)}}
+html[dir="rtl"] .acc-head,html[dir="rtl"] .ccard{text-align:right}
+html[dir="rtl"] .acc-sum{padding:16px 72px 26px 24px}
+@media (min-width:700px){html[dir="rtl"] .acc-sum{padding:18px 78px 28px 30px}}
+@media (max-width:600px){html[dir="rtl"] .acc-sum{padding-right:24px}}
+html[dir="rtl"] .quick label::after{right:auto;left:20px}
+html[dir="rtl"] .stay-row select,html[dir="rtl"] .field select{background-position:12px 50%,17px 50%;padding-right:16px;padding-left:40px}
+html[dir="rtl"] .dropdown{text-align:right}
+html[dir="rtl"] .brand,html[dir="rtl"] .giant,html[dir="rtl"] .loader .word,html[dir="rtl"] .veil .vw,html[dir="rtl"] .contact-lines a,html[dir="rtl"] .ccard b,html[dir="rtl"] [data-clock],html[dir="rtl"] .bcard b{direction:ltr}
+html[dir="rtl"] .brand{flex-direction:row-reverse}
+html[dir="rtl"] .contact-lines a,html[dir="rtl"] .contact-lines div{justify-content:flex-end}
+html[dir="rtl"] .wa{right:auto;left:calc(env(safe-area-inset-left,0px) + 18px)}
+html[dir="rtl"] .itin-nav a{grid-template-columns:60px 1fr}

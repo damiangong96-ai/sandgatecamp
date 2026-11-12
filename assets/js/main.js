@@ -6,8 +6,10 @@
   var TZ = 'Africa/Cairo';
   var WA = '34696972569';
   var MAIL = 'info@sandgatecamp.com';
-  var ES = (root.getAttribute('lang') || 'es').slice(0, 2) === 'es';
+  var LG = (root.getAttribute('lang') || 'es').slice(0, 2);
+  var ES = LG === 'es', AR = LG === 'ar';
   var LOC = ES ? 'es-ES' : 'en-GB';
+  var tr = function (es, en, ar) { return AR ? ar : (ES ? es : en); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ---------- Hide broken hotlinked images, gradient stays ---------- */
@@ -48,14 +50,14 @@
   function hm(date) { return fmt.format(date); }
   function phase(now, s) {
     var t = now.valueOf(), r = s.rise.valueOf(), st = s.set.valueOf(), m = 60000;
-    if (t < r - 40 * m || t > st + 50 * m) return ES ? 'Noche estrellada' : 'Stars out';
-    if (t < r + 40 * m) return ES ? 'Primera luz' : 'First light';
-    if (t > st) return ES ? 'Anochecer' : 'Dusk';
-    if (t > st - 70 * m) return ES ? 'Hora dorada' : 'Golden hour';
+    if (t < r - 40 * m || t > st + 50 * m) return tr('Noche estrellada', 'Stars out', 'ليل مرصّع بالنجوم');
+    if (t < r + 40 * m) return tr('Primera luz', 'First light', 'أول الضوء');
+    if (t > st) return tr('Anochecer', 'Dusk', 'الغسق');
+    if (t > st - 70 * m) return tr('Hora dorada', 'Golden hour', 'الساعة الذهبية');
     var h = parseInt(hm(now).slice(0, 2), 10);
-    if (h >= 12 && h < 15) return ES ? 'Horas de sombra' : 'Shade hours';
-    if (h < 12) return ES ? 'Mañana' : 'Morning';
-    return ES ? 'Tarde' : 'Afternoon';
+    if (h >= 12 && h < 15) return tr('Horas de sombra', 'Shade hours', 'ساعات الظل');
+    if (h < 12) return tr('Mañana', 'Morning', 'الصباح');
+    return tr('Tarde', 'Afternoon', 'بعد الظهر');
   }
   var today = sunTimes(new Date(), CAMP.lat, CAMP.lng);
   var tomorrow = sunTimes(new Date(Date.now() + dayMs), CAMP.lat, CAMP.lng);
@@ -282,7 +284,7 @@
   d.querySelectorAll('.quotes').forEach(function (q) {
     var items = q.querySelectorAll('.quote'), dots = q.querySelector('.dots'), i = 0, timer;
     items.forEach(function (_, k) {
-      var b = d.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', (ES ? 'Mostrar motivo ' : 'Show reason ') + (k + 1));
+      var b = d.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', tr('Mostrar motivo ', 'Show reason ', 'عرض السبب ') + (k + 1));
       b.addEventListener('click', function () { go(k); restart(); }); dots.appendChild(b);
     });
     function go(k) {
@@ -409,14 +411,14 @@
     };
     var valid = function () {
       var bad = form.querySelector(':invalid');
-      if (bad) { bad.focus(); if (msg) msg.textContent = (ES ? 'Completa el campo: ' : 'Please complete: ') + (bad.getAttribute('data-label') || bad.name) + '.'; return false; }
+      if (bad) { bad.focus(); if (msg) msg.textContent = tr('Completa el campo: ', 'Please complete: ', 'يرجى إكمال: ') + (bad.getAttribute('data-label') || bad.name) + '.'; return false; }
       if (msg) msg.textContent = '';
       return true;
     };
     form.addEventListener('submit', function (ev) {
       ev.preventDefault(); if (!valid()) return;
       location.href = mailLink(form.getAttribute('data-subject') || 'Enquiry', build());
-      if (msg) msg.textContent = (ES ? 'Se abrirá tu aplicación de correo con el mensaje listo para enviar a ' : 'Your email app should open with the message ready to send to ') + MAIL + '.';
+      if (msg) msg.textContent = tr('Se abrirá tu aplicación de correo con el mensaje listo para enviar a ', 'Your email app should open with the message ready to send to ', 'سيُفتح تطبيق البريد ورسالتك جاهزة للإرسال إلى ') + MAIL + '.';
     });
     var w = form.querySelector('[data-wa]');
     if (w) w.addEventListener('click', function () { if (!valid()) return; window.open(waLink(build()), '_blank', 'noopener'); });
@@ -446,10 +448,28 @@
   d.querySelectorAll('[data-copy]').forEach(function (b) {
     b.addEventListener('click', function () {
       var v = b.getAttribute('data-copy'), lab = b.querySelector('em');
-      var done = function () { if (lab) { var o = lab.textContent; lab.textContent = ES ? 'Copiado' : 'Copied'; setTimeout(function () { lab.textContent = o; }, 1600); } };
+      var done = function () { if (lab) { var o = lab.textContent; lab.textContent = tr('Copiado', 'Copied', 'تم النسخ'); setTimeout(function () { lab.textContent = o; }, 1600); } };
       if (navigator.clipboard) navigator.clipboard.writeText(v).then(done, function () {});
     });
   });
+
+  /* ---------- Footer scene: the gate rises into view ---------- */
+  var scene = d.querySelector('.foot-scene');
+  if (scene && !reduce) {
+    var simg = scene.querySelector('.scene-img'), giant = scene.querySelector('.giant span'), sTick = false;
+    var sceneFrame = function () {
+      sTick = false;
+      var r = scene.getBoundingClientRect(), vh = window.innerHeight;
+      if (r.top > vh || r.bottom < 0) return;
+      var k = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.9)));   /* 0 entering → 1 settled */
+      simg.style.transform = 'translate3d(0,' + ((1 - k) * 8).toFixed(2) + '%,0) scale(' + (1.12 - k * 0.12).toFixed(3) + ')';
+      scene.style.setProperty('--sun', (0.7 + k * 0.45).toFixed(3));
+      scene.style.setProperty('--sunop', (0.25 + k * 0.6).toFixed(3));
+      if (giant) giant.style.transform = 'translateY(' + ((1 - k) * 45).toFixed(1) + '%)';
+    };
+    var sReq = function () { if (!sTick) { sTick = true; requestAnimationFrame(sceneFrame); } };
+    window.addEventListener('scroll', sReq, { passive: true }); window.addEventListener('resize', sReq); sReq();
+  }
 
   var y = d.querySelector('[data-year]'); if (y) y.textContent = new Date().getFullYear();
 })();
