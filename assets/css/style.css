@@ -771,3 +771,25 @@ html[dir="rtl"] .brand{flex-direction:row-reverse}
 html[dir="rtl"] .contact-lines a,html[dir="rtl"] .contact-lines div{justify-content:flex-end}
 html[dir="rtl"] .wa{right:auto;left:calc(env(safe-area-inset-left,0px) + 18px)}
 html[dir="rtl"] .itin-nav a{grid-template-columns:60px 1fr}
+
+/* ---------- Legibility pass (text over photos and dark gradients) ---------- */
+.display em,.h1 em,.h2 em,.h3 em,.statement em,.quote em{color:var(--copper-deep)}
+.on-dark .display em,.on-dark .h1 em,.on-dark .h2 em,.on-dark .h3 em,.on-dark .quote em,.hero em,.chapter em,.plan .head em,.sunset em,.phero em{color:var(--apricot)}
+.chapter .lede,.chapter .eyebrow{color:rgba(251,246,238,.88)}
+.chapter::after{background:linear-gradient(180deg,rgba(28,19,20,.92) 0%,rgba(28,19,20,.62) 40%,rgba(28,19,20,.6) 70%,rgba(28,19,20,.92) 100%)}
+.plan .head .eyebrow,.plan .head .lede{color:rgba(251,246,238,.86)}
+.sunset{background:linear-gradient(180deg,var(--clay) 0%,var(--rust) 26%,var(--wine) 52%,var(--plum) 78%,var(--night) 100%)}
+.sunset .pill{background:rgba(251,246,238,.1);border-color:rgba(251,246,238,.22);color:rgba(251,246,238,.92)}
+.sunset .pill svg{opacity:.9}
+.hero .display,.hero .h1,.hero .lede,.hero .crumbs{text-shadow:0 2px 24px rgba(17,13,12,.45)}
+@media (max-width:760px){.hero::after{background:linear-gradient(180deg,rgba(17,13,12,.62) 0%,rgba(17,13,12,.35) 35%,rgba(17,13,12,.5) 60%,rgba(17,13,12,.9) 100%)}}
+.exp-item h3 i{color:var(--rust)}
+.footer .h2 em{color:var(--copper-deep)}
+
+/* ---------- Logo fills its circle ---------- */
+.brand .logo{width:50px;height:50px;padding:0;background:var(--cream)}
+.brand .logo img{width:100%;height:100%;object-fit:contain;transform:scale(1.04)}
+@media (max-width:380px){.brand .logo{width:42px;height:42px}.brand .logo img{width:100%;height:100%}}
+.hero::after{background:linear-gradient(90deg,rgba(17,13,12,.55) 0%,rgba(17,13,12,.2) 55%,rgba(17,13,12,.1) 75%),linear-gradient(180deg,rgba(17,13,12,.6) 0%,rgba(17,13,12,.38) 30%,rgba(17,13,12,.42) 58%,rgba(17,13,12,.9) 100%)}
+html[dir="rtl"] .hero::after{background:linear-gradient(270deg,rgba(17,13,12,.55) 0%,rgba(17,13,12,.2) 55%,rgba(17,13,12,.1) 75%),linear-gradient(180deg,rgba(17,13,12,.6) 0%,rgba(17,13,12,.38) 30%,rgba(17,13,12,.42) 58%,rgba(17,13,12,.9) 100%)}
+@media (max-width:760px){.hero::after,html[dir="rtl"] .hero::after{background:linear-gradient(180deg,rgba(17,13,12,.66) 0%,rgba(17,13,12,.52) 35%,rgba(17,13,12,.58) 60%,rgba(17,13,12,.92) 100%)}}
