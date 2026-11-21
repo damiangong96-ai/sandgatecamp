@@ -200,8 +200,7 @@
   });
 
   /* ---------- Statement word reveal (scrubbed) ---------- */
-  var st = d.querySelector('.statement[data-words]');
-  if (st) {
+  d.querySelectorAll('[data-words]').forEach(function (st) {
     var walk = function (node) {
       Array.prototype.slice.call(node.childNodes).forEach(function (c) {
         if (c.nodeType === 3) {
@@ -227,7 +226,7 @@
     };
     if (reduce) words.forEach(function (w) { w.classList.add('on'); });
     else { upd(); window.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); }
-  }
+  });
 
   /* ---------- Count up ---------- */
   var cio = new IntersectionObserver(function (entries) {
@@ -470,6 +469,58 @@
     var sReq = function () { if (!sTick) { sTick = true; requestAnimationFrame(sceneFrame); } };
     window.addEventListener('scroll', sReq, { passive: true }); window.addEventListener('resize', sReq); sReq();
   }
+
+
+  /* ---------- Tribe: caravan route drawn by scroll, parallax, star ---------- */
+  d.querySelectorAll('.tribe').forEach(function (sec) {
+    var body = sec.querySelector('.route-body'), svg = body && body.querySelector('.route-svg');
+    var track = svg && svg.querySelector('.route-track'), ink = svg && svg.querySelector('.route-ink'), dot = svg && svg.querySelector('.route-dot');
+    var stops = body ? Array.prototype.slice.call(body.querySelectorAll('.stop')) : [];
+    var pars = Array.prototype.slice.call(sec.querySelectorAll('[data-par]'));
+    var stars = sec.querySelectorAll('.tribe-star');
+    var H = 0, len = 0, ticking = false, visible = false;
+    var build = function () {
+      if (!svg) return;
+      H = body.offsetHeight;
+      var x = 24, seg = 150, path = 'M' + x + ' 0', k = 0;
+      for (var y = 0; y < H; y += seg, k++) {
+        var y2 = Math.min(H, y + seg), a = (k % 2 ? 1 : -1) * 11, h = y2 - y;
+        path += ' C' + (x + a) + ' ' + (y + h * .33) + ' ' + (x + a) + ' ' + (y + h * .66) + ' ' + x + ' ' + y2;
+      }
+      svg.setAttribute('viewBox', '0 0 48 ' + H);
+      track.setAttribute('d', path); ink.setAttribute('d', path);
+      len = ink.getTotalLength();
+      ink.style.strokeDasharray = len + ' ' + len;
+      frame();
+    };
+    var frame = function () {
+      ticking = false;
+      var vh = window.innerHeight;
+      if (svg && H) {
+        var r = body.getBoundingClientRect();
+        var yy = reduce ? H : Math.max(0, Math.min(H, vh * .62 - r.top));
+        var p = yy / H;
+        ink.style.strokeDashoffset = len * (1 - p);
+        var pt = ink.getPointAtLength(len * p);
+        dot.setAttribute('transform', 'translate(' + pt.x + ' ' + pt.y + ')');
+        stops.forEach(function (s) { s.classList.toggle('on', reduce || s.offsetTop + 24 <= yy); });
+      }
+      if (reduce) return;
+      pars.forEach(function (el) {
+        var r = el.getBoundingClientRect(), c = r.top + r.height / 2 - vh / 2;
+        var im = el.querySelector('img'); if (im) im.style.transform = 'translate3d(0,' + (c * parseFloat(el.getAttribute('data-par'))).toFixed(1) + 'px,0) scale(1.14)';
+      });
+      var sr = sec.getBoundingClientRect();
+      stars.forEach(function (st) { st.style.setProperty('--rot', (-sr.top * .12).toFixed(1) + 'deg'); });
+    };
+    var req = function () { if (visible && !ticking) { ticking = true; requestAnimationFrame(frame); } };
+    new IntersectionObserver(function (en) { visible = en[0].isIntersecting; req(); }, { rootMargin: '200px 0px' }).observe(sec);
+    window.addEventListener('scroll', req, { passive: true });
+    window.addEventListener('resize', build);
+    window.addEventListener('load', build);
+    if (d.fonts && d.fonts.ready) d.fonts.ready.then(build);
+    build();
+  });
 
   var y = d.querySelector('[data-year]'); if (y) y.textContent = new Date().getFullYear();
 })();
