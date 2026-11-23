@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sandgatecamp.com/sitemap.xml
