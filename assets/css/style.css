@@ -888,3 +888,5 @@ html[dir="rtl"] .contact-lines a .num{direction:ltr;unicode-bidi:isolate}
 .ccard b{display:block}
 html[dir="rtl"] .ccard b,html[dir="rtl"] .bcard b{text-align:right}html[dir="rtl"] .ccard b[dir=ltr],html[dir="rtl"] .bcard b[dir=ltr]{direction:ltr;unicode-bidi:isolate}
 @media (min-width:1100px){.bcard b{font-size:min(1.3rem,1.55vw);overflow-wrap:normal}}
+@media (min-width:900px){.glass-row{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:1180px){.glass-row{grid-template-columns:repeat(6,minmax(0,1fr));max-width:1240px}}
